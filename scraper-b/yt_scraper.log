@@ -1,0 +1,11 @@
+2025-12-02 15:59:25,876 INFO [scraper-b] request_received url: https://www.youtube.com/@HowHistoryWorks
+2025-12-02 16:11:04,225 INFO [scraper-b] request_received url: https://www.youtube.com/@HowHistoryWorks
+2025-12-02 16:15:21,993 INFO [scraper-b] request_received url: https://www.youtube.com/@HowHistoryWorks
+2025-12-02 18:38:34,559 INFO [scraper-b] request_received url: https://www.youtube.com/@SharkTankIndia
+2025-12-02 18:38:37,074 INFO [scraper-b] meta_data_uploaded
+2025-12-02 19:18:38,323 INFO [scraper-b] request_received url: https://www.youtube.com/@SharkTankIndia
+2025-12-02 19:19:02,520 INFO [scraper-b] meta_data_uploaded
+2025-12-02 19:27:05,290 INFO [scraper-b] request_received url: https://www.youtube.com/@SharkTankIndia
+2025-12-02 19:27:23,887 INFO [scraper-b] meta_data_uploaded
+2025-12-02 19:28:38,958 INFO [scraper-b] request_received url: https://www.youtube.com/@SharkTankIndia
+2025-12-02 19:30:35,868 INFO [scraper-b] meta_data_uploaded

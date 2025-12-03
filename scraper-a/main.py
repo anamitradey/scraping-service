@@ -1,18 +1,21 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import requests
-from lxml import html
-import pandas as pd
 from logging import LoggerAdapter, Logger
-
+import hashlib
+import re
+from datetime import datetime, timezone
+import gzip
+from google.cloud import storage
 from common.logging_config import get_logger
 
 logger: LoggerAdapter[Logger] = get_logger()
 app = FastAPI()
-
+_storage = storage.Client()
+bucket_name = "isolated-temp-1-yt-scrape-2c493a"
 headers = {
   'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-  'accept-encoding': 'gzip, deflate, br, zstd',
+  'accept-encoding': '',
   'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
   'connection': 'keep-alive',
   'host': 'www.youtube.com',
@@ -39,8 +42,15 @@ def parse_url_to_channel_id(url: str) -> str:
     try:
         response = requests.request("GET", url, headers=headers, data=payload)
         html_res = response.text
-        tree = html.fromstring(html_res)
-        channel_url = tree.xpath("//link[starts-with(@href, 'http://www.youtube.com/@')]/@href")[0]
+        gcs_uri = upload_html(url, html_res)
+        logger.info(
+            "raw_html_uploaded",
+            extra={"event": "raw_html_uploaded", "url": url, "gcs_uri": gcs_uri},
+        )
+        match = re.search(r'"canonicalBaseUrl":"(/@[^"]+)"', html_res)
+        if not match:
+            raise ValueError("canonicalBaseUrl not found in response")
+        channel_url = f"https://www.youtube.com{match.group(1)}"
         return channel_url
     except Exception as e:
         logger.error(f"Exception while scraping {e}")
@@ -50,7 +60,7 @@ def parse_url_to_channel_id(url: str) -> str:
 def extract_channel_id(body: UrlRequest):
     url = body.url.strip()
     logger.info(
-        "request_received",
+        f"request_received url: {url}",
         extra={"event": "request_received", "url": url},
     )
     channel_id = parse_url_to_channel_id(url)
@@ -58,3 +68,12 @@ def extract_channel_id(body: UrlRequest):
     if not channel_id:
         raise HTTPException(status_code=400, detail="Could not extract channel_id")
     return ChannelIdResponse(channel_id=channel_id)
+def _url_hash(url: str) -> str:
+    return hashlib.sha256(url.encode("utf-8")).hexdigest()[:24]
+def upload_html(url: str, html: str, prefix: str = "raw/scraper-a") -> str:
+    day = datetime.now(timezone.utc).date().isoformat()
+    name = f"{prefix}/{day}/{_url_hash(url)}.txt.gz"
+    blob = _storage.bucket(bucket_name).blob(name)
+    compressed = gzip.compress(html.encode("utf-8"))
+    blob.upload_from_string(compressed, content_type="application/gzip")
+    return f"gs://{bucket_name}/{name}"

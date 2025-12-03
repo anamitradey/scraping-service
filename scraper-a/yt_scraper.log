@@ -1,0 +1,10 @@
+2025-11-26 00:34:52,344 INFO [scraper-a] request_received url: https://www.youtube.com/watch?v=BN9zz2O6jcw
+2025-11-26 00:36:01,089 INFO [scraper-a] request_received url: https://www.youtube.com/watch?v=BN9zz2O6jcw
+2025-11-27 20:09:42,546 INFO [scraper-a] request_received url: https://www.youtube.com/watch?v=3CccfnRpPtM
+2025-11-27 20:09:44,936 INFO [scraper-a] raw_html_uploaded
+2025-12-01 13:10:30,252 INFO [scraper-a] request_received url: https://www.youtube.com/watch?v=3CccfnRpPtM
+2025-12-01 13:10:32,409 INFO [scraper-a] raw_html_uploaded
+2025-12-01 13:10:32,422 ERROR [scraper-a] Xpath 1 failed! Trying Xpath 2
+2025-12-01 13:11:08,735 INFO [scraper-a] request_received url: https://www.youtube.com/watch?v=3CccfnRpPtM
+2025-12-01 13:11:11,064 INFO [scraper-a] raw_html_uploaded
+2025-12-01 13:11:17,389 ERROR [scraper-a] Xpath 1 failed! Trying Xpath 2
