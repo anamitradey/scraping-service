@@ -3,5 +3,6 @@ venv
 .env
 __pycache__
 *.log
-logs.*
-/screens
+logs.txt
+*.png
+*.html
