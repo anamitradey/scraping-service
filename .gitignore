@@ -1,2 +1,7 @@
 .vscode
 venv
+.env
+__pycache__
+*.log
+logs.*
+/screens
